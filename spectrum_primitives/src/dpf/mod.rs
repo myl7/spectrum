@@ -1,7 +1,7 @@
 #[macro_use]
 mod definition;
 
-pub(in crate) mod insecure;
+pub(crate) mod insecure;
 pub mod multi_key;
 pub mod two_key;
 

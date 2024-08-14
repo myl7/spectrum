@@ -27,9 +27,9 @@ impl<P> Construction<P> {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Key<M, S> {
-    pub(in crate) encoded_msg: M, //P::Output,
-    pub(in crate) bits: Vec<S>,
-    pub(in crate) seeds: Vec<S>,
+    pub(crate) encoded_msg: M, //P::Output,
+    pub(crate) bits: Vec<S>,
+    pub(crate) seeds: Vec<S>,
 }
 
 impl<M, S> Key<M, S> {

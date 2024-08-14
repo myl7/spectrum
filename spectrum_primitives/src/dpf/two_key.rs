@@ -1,8 +1,8 @@
 //! 2-DPF (i.e. keys = 2) based on any PRG G(.).
 use std::fmt::Debug;
 use std::iter::repeat_with;
-use std::ops;
 use std::sync::Arc;
+use std::{env, ops};
 
 use rand::{thread_rng, Rng};
 use serde::{Deserialize, Serialize};
@@ -187,9 +187,10 @@ impl<P: Arbitrary + 'static> Arbitrary for Construction<P> {
     type Strategy = BoxedStrategy<Self>;
 
     fn arbitrary_with(_: Self::Parameters) -> Self::Strategy {
-        const MAX_POINTS: usize = 10;
-        (any::<P>(), 1..=MAX_POINTS)
-            .prop_map(move |(prg, points)| Construction::new(prg, points))
+        let nb: u32 = env::var("NB").unwrap().parse().unwrap();
+        let max_points: usize = 2usize.pow(nb);
+        (any::<P>())
+            .prop_map(move |prg| Construction::new(prg, max_points))
             .boxed()
     }
 }

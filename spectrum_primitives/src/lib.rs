@@ -11,13 +11,13 @@ mod prg;
 #[macro_use]
 mod bytes;
 #[macro_use]
-mod dpf;
+pub mod dpf;
 #[macro_use]
-mod vdpf;
+pub mod vdpf;
 #[macro_use]
 pub mod pir;
 
-mod constructions;
+pub mod constructions;
 
 pub use algebra::Group;
 pub use bytes::Bytes;

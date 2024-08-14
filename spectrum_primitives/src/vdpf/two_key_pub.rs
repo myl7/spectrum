@@ -8,6 +8,7 @@ use crate::prg::Prg;
 use crate::util::Sampleable;
 use crate::vdpf::Vdpf;
 
+use std::env;
 use std::fmt::Debug;
 use std::iter::repeat_with;
 use std::ops::{BitXor, BitXorAssign};
@@ -257,6 +258,8 @@ where
     ) -> Self::Token {
         assert_eq!(auth_keys.len(), dpf_key.bits.len());
         assert_eq!(auth_keys.len(), dpf_key.seeds.len());
+        let nb: u32 = env::var("NB").unwrap().parse().unwrap();
+        assert_eq!(auth_keys.len(), 2usize.pow(nb));
 
         // Inner product + proof share
         let bit_check = dpf_key
