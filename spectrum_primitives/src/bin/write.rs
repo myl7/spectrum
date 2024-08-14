@@ -62,7 +62,7 @@ fn main() {
 
     let audit_span = info_span!("audit").entered();
     for _ in 0..m {
-        (0..8).into_par_iter().for_each(|_| {
+        (0..16).into_par_iter().for_each(|_| {
             let audit_token = vdpf.gen_audit(&auth_keys, dpf_key, proof_share);
             vdpf.check_audit(vec![audit_token.clone(), audit_token]);
         });
@@ -72,7 +72,7 @@ fn main() {
     let dpf_eval_span = info_span!("dpf_eval").entered();
     let mut msgs_list = vec![];
     for _ in 0..m {
-        msgs_list = (0..8)
+        msgs_list = (0..16)
             .into_par_iter()
             .map(|_| vdpf.eval(dpf_key.clone()))
             .collect();
