@@ -1,31 +1,36 @@
 [package]
 name = "spectrum_primitives"
 version = "0.1.0"
-authors = ["Zachary Newman <zjn@mit.edu>", "Sacha Servan-Schreiber <3s@mit.edu>"]
+authors = [
+  "Zachary Newman <zjn@mit.edu>",
+  "Sacha Servan-Schreiber <3s@mit.edu>",
+]
 edition = "2018"
 
 [features]
-testing = ["proptest"]
+default = ["testing"]
+testing = []
 
 [dependencies]
-blake3 = { version = "0.3.7", features = [ "rayon", "std"] }
+blake3 = { version = "0.3.7", features = ["rayon", "std"] }
 jubjub = "0.6"
-derivative = "2.2.0"  # https://github.com/rust-lang/rust/issues/26925
+derivative = "2.2.0"                                        # https://github.com/rust-lang/rust/issues/26925
 itertools = "0.9.0"
-group = "0.9"  # need this for jubjub compatibility
-ff = "0.9"  # need this for jubjub compatibility
-rand = "0.8"  # need this for jubjub compatability
-rand_core = "0.6"  # need this for jubjub compatibility
-rug = { version = "1.10", features = [ "serde" ] }
-serde = { version = "1.0", features = ["derive", "rc"] }  # TODO: feature-gate
+group = "0.9"                                               # need this for jubjub compatibility
+ff = "0.9"                                                  # need this for jubjub compatibility
+rand = "0.8"                                                # need this for jubjub compatability
+rand_core = "0.6"                                           # need this for jubjub compatibility
+rug = { version = "1.10", features = ["serde"] }
+serde = { version = "1.0", features = ["derive", "rc"] }    # TODO: feature-gate
 openssl = "0.10"
-proptest = { version = "0.9.6", optional = true }
+proptest = "0.9.6"
 proptest-derive = "0.3.0"
 serde_json = { version = "1.0", optional = true }
+tracing-subscriber = "0.3.18"
+tracing = "0.1.40"
+rayon = "1.10.0"
 
 [dev-dependencies]
-proptest = "0.9.5"
-proptest-derive = "0.3.0"
 criterion = "0.3.0"
 serde_json = "1.0"
 

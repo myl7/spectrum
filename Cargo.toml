@@ -1,15 +1,3 @@
 [workspace]
-members = [
-    "spectrum",
-    "spectrum_primitives",
-    "spectrum_protocol",
-]
-
-[profile.release]
-lto = "thin"
-debug = true  # turn on for profiling; bigger binaries but not any slower
-codegen-units = 1  # makes it take a very long time
-
-[profile.bench]
-lto = "thin"
-codegen-units = 1  # makes it take a very long time
+resolver = "2"
+members = ["spectrum", "spectrum_protocol", "spectrum_primitives"]
