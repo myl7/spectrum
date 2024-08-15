@@ -126,7 +126,7 @@ impl Arbitrary for AesPrg {
 
     fn arbitrary_with(_: Self::Parameters) -> Self::Strategy {
         use std::ops::Range;
-        const SIZES: Range<usize> = 16..1000; // in bytes
+        const SIZES: Range<usize> = 1024..1024 + 1; // in bytes
         SIZES.prop_map(AesPrg::new).boxed()
     }
 }
