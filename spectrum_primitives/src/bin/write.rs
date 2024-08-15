@@ -1,11 +1,10 @@
 use std::env;
+use std::time::Instant;
 
 use prop::strategy::ValueTree;
 use prop::test_runner::TestRunner;
 use proptest::prelude::*;
 use rayon::prelude::*;
-use tracing::info_span;
-use tracing_subscriber::fmt::format::FmtSpan;
 
 use spectrum_primitives::{
     constructions::AesPrg,
@@ -39,10 +38,6 @@ fn vdpf_with_keys_data() -> impl Strategy<
 }
 
 fn main() {
-    tracing_subscriber::fmt()
-        .with_span_events(FmtSpan::CLOSE)
-        .init();
-
     let (vdpf, auth_keys, data) = vdpf_with_keys_data()
         .new_tree(&mut TestRunner::deterministic())
         .unwrap()
@@ -57,27 +52,31 @@ fn main() {
 
     let mb: u32 = env::var("MB").unwrap().parse().unwrap();
     let m = 2usize.pow(mb);
+    let thread_num: usize = env::var("THREAD_NUM")
+        .unwrap_or("8".to_string())
+        .parse()
+        .unwrap();
 
-    let write_span = info_span!("write").entered();
+    let write_start = Instant::now();
 
-    let audit_span = info_span!("audit").entered();
+    let audit_start = Instant::now();
     for _ in 0..m {
-        (0..16).into_par_iter().for_each(|_| {
+        (0..thread_num).into_par_iter().for_each(|_| {
             let audit_token = vdpf.gen_audit(&auth_keys, dpf_key, proof_share);
             vdpf.check_audit(vec![audit_token.clone(), audit_token]);
         });
     }
-    drop(audit_span);
+    println!("audit: {:?}", audit_start.elapsed());
 
-    let dpf_eval_span = info_span!("dpf_eval").entered();
+    let dpf_eval_start = Instant::now();
     let mut msgs_list = vec![];
     for _ in 0..m {
-        msgs_list = (0..16)
+        msgs_list = (0..thread_num)
             .into_par_iter()
             .map(|_| vdpf.eval(dpf_key.clone()))
             .collect();
     }
-    drop(dpf_eval_span);
+    println!("dpf eval: {:?}", dpf_eval_start.elapsed());
 
     let mut output = vec![];
     for _ in 0..m {
@@ -85,6 +84,7 @@ fn main() {
         msgs_list_clone.push(old.clone());
         output = vdpf.combine(msgs_list_clone);
     }
-    drop(write_span);
+
+    println!("write: {:?}", write_start.elapsed());
     assert_eq!(output.len(), vdpf.points());
 }
